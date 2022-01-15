@@ -78,7 +78,7 @@ resource "aws_cloudwatch_log_group" "api_gw" {
 resource "aws_dynamodb_table" "ddb" {
   name           = "spotify-party-vote"
   billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "UserId"
+  hash_key       = "RoundId"
   range_key      = "GameTitle"
 
   attribute {

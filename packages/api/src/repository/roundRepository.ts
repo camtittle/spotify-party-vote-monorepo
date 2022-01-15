@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { IRoundRepository } from "../interfaces/IRoundRepository";
-import { RoundEntity } from "../models/entities/round";
+import { IRoundRepository } from "../interface/IRoundRepository";
+import { RoundEntity } from "../model/entity/round";
 
 @injectable()
 export class RoundRepository extends IRoundRepository {

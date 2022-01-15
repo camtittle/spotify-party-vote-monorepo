@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import { APIGatewayEvent, Context } from "aws-lambda";
 import { inject, injectable } from "inversify";
-import { IPartyRepository } from "../../../interfaces/iPartyRepository";
+import { IRoundRepository } from "../../../interface/IRoundRepository";
 import { getDiContainer } from './castVote.di';
 
 @injectable()
 class CastVoteController {
 
-    constructor(@inject(IPartyRepository) private partyRepository: IPartyRepository) {
+    constructor(@inject(IRoundRepository) private partyRepository: IRoundRepository) {
     }
 
     public handler = async (event: APIGatewayEvent, context: Context): Promise<void> => {

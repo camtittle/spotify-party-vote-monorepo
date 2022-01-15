@@ -22,3 +22,7 @@ Run `yarn install` in the root directory. To build an individidual package:
 ## Deploy
 
 TODO
+
+## Database structure
+
+Primary k

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { ITrackRepository } from "../interfaces/ITrackRepository";
-import { TrackEntity } from "../models/entities/track";
+import { ITrackRepository } from "../interface/ITrackRepository";
+import { TrackEntity } from "../model/entity/track";
 
 @injectable()
 export class TrackRepository extends ITrackRepository {

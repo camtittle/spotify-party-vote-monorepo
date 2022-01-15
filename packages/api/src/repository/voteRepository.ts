@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { IVoteRepository } from "../interfaces/IVoteRepository";
-import { RoundEntity } from "../models/entities/round";
+import { IVoteRepository } from "../interface/IVoteRepository";
+import { RoundEntity } from "../model/entity/round";
 
 @injectable()
 export class VoteRepository extends IVoteRepository {

@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { RoundEntity } from "../models/entities/round";
+import { RoundEntity } from "../model/entity/round";
 
 @injectable()
 export abstract class IVoteRepository {
