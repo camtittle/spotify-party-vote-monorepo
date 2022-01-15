@@ -2,13 +2,15 @@
 
 A project to allow party guests to vote for the next song to play on the host's Spotify.
 
-## Set up
+## Tools
 
 Following tools are required:
 
 * Yarn 2
 
 The project is organised as a monorepo utilising Yarn workspaces and Typescript references. The separate packages live in `./packages`.
+
+Inversify is used for dependecy injection in the API functions.
 
 ## Build
 

@@ -1,11 +1,22 @@
 const path = require('path');
+var glob = require("glob");
+
+var files = glob.sync("./src/function/**/*.ts");
+var entries = {};
+files.forEach(file => {
+  var matches = file.match(/\.*(\w+)\.ts$/);
+  if (matches && matches[1] !== 'di') { // ignore DI files
+    entries[matches[1]] = file;
+  }
+});
+
+console.log('** Building the following entires...');
+console.log(entries);
 
 module.exports = {
   target: 'node',
   mode: 'production',
-  entry:  {
-    getRound: "./src/functions/getRound.ts",
-  },
+  entry: entries,
   module: {
     rules: [
       {

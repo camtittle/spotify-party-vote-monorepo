@@ -1,0 +1,1 @@
+// When host connects with websocket, register connection in DB
