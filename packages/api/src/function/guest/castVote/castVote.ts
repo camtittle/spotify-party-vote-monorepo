@@ -1,17 +1,22 @@
-import { APIGatewayEvent, Callback, Context } from "aws-lambda";
-import { inject } from "inversify";
+import 'reflect-metadata';
+import { APIGatewayEvent, Context } from "aws-lambda";
+import { inject, injectable } from "inversify";
 import { IPartyRepository } from "../../../interfaces/iPartyRepository";
-import { container } from "./castVote.di";
+import { getDiContainer } from './castVote.di';
 
-export class CastVoteController {
+@injectable()
+class CastVoteController {
 
     constructor(@inject(IPartyRepository) private partyRepository: IPartyRepository) {
     }
 
-    public handler = (event: APIGatewayEvent, context: Context, callback: Callback) => {
+    public handler = async (event: APIGatewayEvent, context: Context): Promise<void> => {
         this.partyRepository.getParty();
+        console.log('hello');
     }
 }
 
 // Construct controller class using DI, and export its handler method
-export const handler = container.get(CastVoteController).handler;
+const handler = getDiContainer().get(CastVoteController).handler;
+
+export { CastVoteController, handler }
