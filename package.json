@@ -1,0 +1,13 @@
+{
+  "name": "spotify-party-vote",
+  "packageManager": "yarn@3.1.1",
+  "scripts": {
+    "terraformApply": "cd terraform && terraform apply -auto-approve"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}

@@ -1,0 +1,15 @@
+{
+    "name": "@spotify-party-vote/core",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc --build"
+    },
+    "devDependencies": {
+        "typescript": "^4.5.4"
+    }
+}
