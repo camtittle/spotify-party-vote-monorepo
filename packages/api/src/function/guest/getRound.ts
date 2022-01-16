@@ -1,4 +1,3 @@
-import { GetRoundResponse, libFunction } from '@spotify-party-vote/core';
 
 export const getRound = () => {
 
