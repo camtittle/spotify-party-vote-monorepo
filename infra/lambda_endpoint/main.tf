@@ -12,22 +12,22 @@ resource "aws_s3_bucket_object" "code_package" {
 
   key    = "${var.name}.zip"
   source = data.archive_file.code_package.output_path
-
   etag = filemd5(data.archive_file.code_package.output_path)
 }
 
 resource "aws_lambda_function" "endpoint" {
   function_name = "${var.project}-${var.environment}-${var.name}"
-
   s3_bucket = var.s3_bucket_id
   s3_key    = aws_s3_bucket_object.code_package.key
-
   runtime = "nodejs12.x"
   handler = var.handler
-
   source_code_hash = data.archive_file.code_package.output_base64sha256
-
   role = var.lambda_execution_role_arn
+
+  environment {
+    variables = var.environment_variables
+  }
+
 }
 
 resource "aws_cloudwatch_log_group" "endpoint" {

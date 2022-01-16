@@ -39,4 +39,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'commonjs'
   },
+  optimization: {
+    minimize: false, // Minimization breaks inversify
+  },
 };

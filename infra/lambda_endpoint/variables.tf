@@ -47,3 +47,9 @@ variable "route_key" {
     type = string
     description = "Route key for the endpoint, eg. GET /health"
 }
+
+variable "environment_variables" {
+    type = map
+    description = "Map of environment variables to pass to the lambda function"
+    default = {}
+}

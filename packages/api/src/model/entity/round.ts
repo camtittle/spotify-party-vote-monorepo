@@ -1,5 +1,5 @@
 import { BaseItem } from "./baseItem";
-import { DbItemType } from "./itemType";
+import { DbItemType } from "../../enum/dbItemType";
 import { TrackEntity } from "./track";
 
 export interface RoundEntity extends BaseItem {
@@ -10,10 +10,10 @@ export interface RoundEntity extends BaseItem {
     updatedAt: string;
 }
 
-export const RoundEntityToDbItem = (entity: RoundEntity): RoundDbItem => {
-    return {
-        ...entity,
-        partitionKey: `${DbItemType.Round}#${entity.partyId}`,
-        sortKey: entity.roundId
-    }
-}
+// export const RoundEntityToDbItem = (entity: RoundEntity): RoundDbItem => {
+//     return {
+//         ...entity,
+//         partitionKey: `${DbItemType.Round}#${entity.partyId}`,
+//         sortKey: entity.roundId
+//     }
+// }

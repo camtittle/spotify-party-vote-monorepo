@@ -32,6 +32,21 @@ resource "aws_iam_role" "lambda_exec" {
       }
     ]
   })
+
+  inline_policy {
+    name = "AllowManageSqsMessages"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
+          Effect   = "Allow"
+          Resource = aws_sqs_queue.votes.arn
+        },
+      ]
+    })
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
@@ -39,80 +54,19 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# API Gateway
-resource "aws_apigatewayv2_api" "lambda" {
-  name          = "${var.project}-${var.environment}-apigw"
-  protocol_type = "HTTP"
-}
-
-resource "aws_apigatewayv2_stage" "lambda" {
-  api_id = aws_apigatewayv2_api.lambda.id
-
-  name        = var.environment
-  auto_deploy = true
-
-  access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gw.arn
-
-    format = jsonencode({
-      requestId               = "$context.requestId"
-      sourceIp                = "$context.identity.sourceIp"
-      requestTime             = "$context.requestTime"
-      protocol                = "$context.protocol"
-      httpMethod              = "$context.httpMethod"
-      resourcePath            = "$context.resourcePath"
-      routeKey                = "$context.routeKey"
-      status                  = "$context.status"
-      responseLength          = "$context.responseLength"
-      integrationErrorMessage = "$context.integrationErrorMessage"
-      }
-    )
-  }
-}
-
-resource "aws_cloudwatch_log_group" "api_gw" {
-  name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
-  retention_in_days = 30
-}
-
 resource "aws_dynamodb_table" "ddb" {
-  name           = "spotify-party-vote"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "RoundId"
-  range_key      = "GameTitle"
+  name         = "spotify-party-vote"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "partitionKey"
+  range_key    = "sortKey"
 
   attribute {
-    name = "UserId"
+    name = "partitionKey"
     type = "S"
   }
 
   attribute {
-    name = "GameTitle"
+    name = "sortKey"
     type = "S"
-  }
-
-  attribute {
-    name = "TopScore"
-    type = "N"
-  }
-
-  ttl {
-    attribute_name = "TimeToExist"
-    enabled        = false
-  }
-
-  global_secondary_index {
-    name               = "GameTitleIndex"
-    hash_key           = "GameTitle"
-    range_key          = "TopScore"
-    write_capacity     = 10
-    read_capacity      = 10
-    projection_type    = "INCLUDE"
-    non_key_attributes = ["UserId"]
-  }
-
-  tags = {
-    Name        = "dynamodb-table-1"
-    Environment = "production"
   }
 }
