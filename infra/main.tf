@@ -47,6 +47,28 @@ resource "aws_iam_role" "lambda_exec" {
       ]
     })
   }
+
+  inline_policy {
+    name = "AccessDynamoDb"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = [
+            "dyamodb:PutItem", 
+            "dynamodb:GetItem", 
+            "dynamodb:Query", 
+            "dynamodb:UpdateItem", 
+            "dynamodb:Scan", 
+            "dynamodb:DeleteItem"
+          ]
+          Effect   = "Allow"
+          Resource = aws_dynamodb_table.ddb.arn
+        },
+      ]
+    })
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
