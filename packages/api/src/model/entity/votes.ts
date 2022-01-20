@@ -10,12 +10,3 @@ export interface VotesEntity extends BaseItem {
     createdAt: string;
     updatedAt: string;
 }
-
-// TODO move this logic to repository
-// export const VoteEntityToDbItem = (entity: VotesEntity): VoteDbItem => {
-//     return {
-//         ...entity,
-//         partitionKey: `${DbItemType.Vote}#${entity.partyId}`,
-//         sortKey: `${entity.roundId}#${entity.trackId}`
-//     }
-// }

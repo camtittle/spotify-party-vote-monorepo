@@ -56,7 +56,7 @@ resource "aws_iam_role" "lambda_exec" {
       Statement = [
         {
           Action   = [
-            "dyamodb:PutItem", 
+            "dynamodb:PutItem",
             "dynamodb:GetItem", 
             "dynamodb:Query", 
             "dynamodb:UpdateItem", 

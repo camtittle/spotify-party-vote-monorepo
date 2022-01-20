@@ -1,3 +1,3 @@
-export interface StartRoundResponse {
+export interface StartRoundRequest {
     partyId: string;
 }

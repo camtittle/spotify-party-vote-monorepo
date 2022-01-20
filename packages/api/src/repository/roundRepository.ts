@@ -24,6 +24,8 @@ export class RoundRepository extends IRoundRepository {
     }
 
     public async createRound(partyId: string, tracks: TrackEntity[]): Promise<RoundEntity> {
+        console.log(`Creating round for party ${partyId} with tracks ${tracks.map(x => x.title).join(', ')}`);
+        console.log(`table name: ${this.getTableName()}`);
         const roundId = uuid();
         const round: RoundEntity = {
             partitionKey: `${DbItemType.Round}#${partyId}`,

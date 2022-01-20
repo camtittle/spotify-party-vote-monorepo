@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="dist">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/infra/lambda_endpoint/dist/castVote.js.zip!/" />
+      <root url="jar://$PROJECT_DIR$/infra/lambda_endpoint/dist/castVote.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

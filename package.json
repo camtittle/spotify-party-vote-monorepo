@@ -1,5 +1,5 @@
 {
-  "name": "spotify-party-vote",
+  "name": "spotify-party-vote-monorepo",
   "packageManager": "yarn@3.1.1",
   "scripts": {
     "terraformApply": "cd terraform && terraform apply -auto-approve"

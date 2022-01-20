@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="voteHandler.js">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/infra/dist/voteHandler.js.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

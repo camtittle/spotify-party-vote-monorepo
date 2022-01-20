@@ -1,6 +1,7 @@
 {
   "name": "@spotify-party-vote/api",
   "version": "0.0.1",
+  "private": true,
   "scripts": {
     "build": "webpack",
     "build:production": "npm run prestart && npm prune --production",
