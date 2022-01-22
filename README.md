@@ -4,13 +4,20 @@ A project to allow party guests to vote for the next song to play on the host's 
 
 ## Tools
 
-Following tools are required:
+I've been trying out a few things in this project, such as:
 
-* Yarn 2
+* Organising as a monorepo utilising Yarn 2 workspaces and Typescript references. The workspaces live in `./packages`.
+* Using DynamoDB Local in a docker container for automated integration testing
+* Using Inversify.js for dependency injection
 
-The project is organised as a monorepo utilising Yarn workspaces and Typescript references. The separate packages live in `./packages`.
+## Running Tests
 
-Inversify is used for dependecy injection in the API functions.
+### Integration tests
+
+From the `/packages/api` directory, run:
+
+* `yarn dynamodb-local:start` to run the DynamoDB local emulator
+* `yarn test:integration` from a separate command window to run the tests
 
 ## Build
 
@@ -21,8 +28,8 @@ Run `yarn install` in the root directory. To build an individidual package:
 
 ## Deploy
 
-TODO
+To build the API run 
 
-## Database structure
-
-Primary k
+```
+yarn workspace @spotify-party-vote/api build
+```

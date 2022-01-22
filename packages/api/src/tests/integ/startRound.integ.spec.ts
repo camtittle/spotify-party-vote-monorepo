@@ -18,7 +18,6 @@ describe('startRound', () => {
         this.timeout(30000);
         initialiseEnvironmentVariables();
         await initialiseDatabase();
-        await purgeDatabase();
     });
 
     it('creates required entities in database', async () => {
