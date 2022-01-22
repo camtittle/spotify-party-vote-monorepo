@@ -9,6 +9,7 @@ import { initialiseEnvironmentVariables } from "./util/environmentUtil";
 import { expect } from 'chai';
 import { BaseItem } from "../../model/entity/baseItem";
 import { RoundEntity } from "../../model/entity/round";
+import { PartyEntity } from "../../model/entity/party";
 
 describe('startRound', () => {
 
@@ -37,11 +38,16 @@ describe('startRound', () => {
         expect(items.filter(x => x.partitionKey.startsWith('ROUND'))).to.have.length(1);
         expect(items.filter(x => x.partitionKey.startsWith('VOTE'))).to.have.length(3);
 
+
         // Response matches ROUND item
         const responseBody = JSON.parse(response.body) as StartRoundResponse;
         const roundDbItem = items.filter(x => x.partitionKey.startsWith('ROUND'))[0] as RoundEntity;
         expect(responseBody.roundId).to.equal(roundDbItem.roundId);
         expect(responseBody.partyId).to.equal(roundDbItem.partyId);
+
+        // Party has current round set
+        const partyDbItem = items.filter(x => x.partitionKey.startsWith('PARTY'))[0] as PartyEntity;
+        expect(partyDbItem.activeRoundId).to.equal(roundDbItem.roundId);
     });
 
 });

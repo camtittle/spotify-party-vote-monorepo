@@ -21,15 +21,18 @@ From the `/packages/api` directory, run:
 
 ## Build
 
-Run `yarn install` in the root directory. To build an individidual package:
+Run `yarn install` in the root directory.
 
-* Change to its directory (e.g. `./packages/api`)
-* Run `yarn run build`
-
-## Deploy
-
-To build the API run 
+To build the API run
 
 ```
 yarn workspace @spotify-party-vote/api build
+```
+
+## Deploy
+
+From `infra` directory:
+
+```
+terraform apply -auto-approve
 ```

@@ -5,9 +5,13 @@ export const tableName = 'parties';
 
 export const initialiseDatabase = async () => {
     console.log('Deleting DynamoDb table');
-    await localDynamoDbClient.deleteTable({
-        TableName: tableName
-    }).promise();
+    try {
+        await localDynamoDbClient.deleteTable({
+            TableName: tableName
+        }).promise();
+    } catch (e) {
+        console.log('Failed to delete table. Probably doesnt exist yet');
+    }
 
     console.log('Creating DynamoDb table')
     await localDynamoDbClient.createTable({

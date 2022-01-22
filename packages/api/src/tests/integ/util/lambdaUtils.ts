@@ -28,6 +28,11 @@ class APIGatewayEventBuilder implements APIGatewayEvent {
         this.httpMethod = method;
         return this;
     }
+
+    withQueryParameters(params: APIGatewayProxyEventQueryStringParameters): APIGatewayEventBuilder {
+        this.queryStringParameters = params;
+        return this;
+    }
 }
 
 export const buildApiGatewayEvent = () : APIGatewayEventBuilder => {

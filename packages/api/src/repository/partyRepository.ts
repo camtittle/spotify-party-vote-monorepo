@@ -21,9 +21,13 @@ export class PartyRepository extends IPartyRepository {
         return this.environmentHelper.getEnvironmentVariable(EnvironmentVariable.DynamoDbTableName);
     }
 
+    private getPartitionKey(partyId: string): string {
+        return `${DbItemType.Party}#${partyId}`;
+    }
+
     public async updateActiveRound(partyId: string, roundId: string): Promise<PartyEntity> {
         const party: PartyEntity = {
-            partitionKey: `${DbItemType.Party}#${partyId}`,
+            partitionKey: this.getPartitionKey(partyId),
             sortKey: partyId,
             partyId: partyId,
             activeRoundId: roundId,
@@ -39,5 +43,25 @@ export class PartyRepository extends IPartyRepository {
         await this.documentClient.put(params).promise();
 
         return party;
+    }
+
+    public async getParty(partyId: string): Promise<PartyEntity> {
+        console.log(`Getting party with Id ${partyId}`);
+
+        const params: DocumentClient.GetItemInput = {
+            TableName: this.getTableName(),
+            Key: {
+                partitionKey: this.getPartitionKey(partyId),
+                sortKey: partyId
+            }
+        };
+
+        const result = await this.documentClient.get(params).promise();
+
+        if (!result.Item) {
+            return undefined;
+        }
+
+        return result.Item as PartyEntity;
     }
 }

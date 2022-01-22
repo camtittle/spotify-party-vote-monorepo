@@ -23,12 +23,16 @@ export class RoundRepository extends IRoundRepository {
         return this.environmentHelper.getEnvironmentVariable(EnvironmentVariable.DynamoDbTableName);
     }
 
+    private getPartitionKey(partyId: string): string {
+        return `${DbItemType.Round}#${partyId}`;
+    }
+
     public async createRound(partyId: string, tracks: TrackEntity[]): Promise<RoundEntity> {
         console.log(`Creating round for party ${partyId} with tracks ${tracks.map(x => x.title).join(', ')}`);
         console.log(`table name: ${this.getTableName()}`);
         const roundId = uuid();
         const round: RoundEntity = {
-            partitionKey: `${DbItemType.Round}#${partyId}`,
+            partitionKey: this.getPartitionKey(partyId),
             sortKey: roundId,
             partyId: partyId,
             roundId: roundId,
@@ -47,7 +51,23 @@ export class RoundRepository extends IRoundRepository {
         return round;
     }
 
-    getRound(partyId: string, roundId: string): Promise<RoundEntity> {
-        throw new Error("Method not implemented.");
+    public async getRound(partyId: string, roundId: string): Promise<RoundEntity> {
+        console.log(`Getting round with Id ${roundId} for partyId ${partyId}`);
+
+        const params: DocumentClient.GetItemInput = {
+            TableName: this.getTableName(),
+            Key: {
+                partitionKey: this.getPartitionKey(partyId),
+                sortKey: roundId
+            }
+        };
+
+        const result = await this.documentClient.get(params).promise();
+
+        if (!result.Item) {
+            return undefined;
+        }
+
+        return result.Item as RoundEntity;
     }
 }

@@ -19,3 +19,13 @@ export const ok = <TBody>(body?: TBody): APIGatewayProxyStructuredResultV2 => {
         body: body ? JSON.stringify(body) : undefined
     }
 };
+
+export const notFound = <TBody>(body?: TBody): APIGatewayProxyStructuredResultV2 => {
+    return {
+        statusCode: 404,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: body ? JSON.stringify(body) : undefined
+    }
+};
