@@ -1,5 +1,6 @@
 export enum DbItemType {
     Vote = 'VOTE',
     Round = 'ROUND',
-    Track = 'TRACK'
+    Track = 'TRACK',
+    Party = 'PARTY'
 }

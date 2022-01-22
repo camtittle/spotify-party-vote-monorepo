@@ -7,7 +7,7 @@ locals {
 data "archive_file" "vote_handler_code_package" {
   type = "zip"
 
-  source_file = "${path.module}/../packages/api/dist/handleVote.js"
+  source_file = "${path.module}/../../../packages/api/dist/handleVote.js"
   output_file_mode = "0666"
   output_path = "${path.module}/dist/${local.lambda_name}.js.zip"
 }

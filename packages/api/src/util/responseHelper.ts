@@ -1,6 +1,6 @@
-import { APIGatewayProxyResultV2 } from "aws-lambda";
+import { APIGatewayProxyStructuredResultV2 } from "aws-lambda";
 
-export const badRequest = (message?: string): APIGatewayProxyResultV2 => {
+export const badRequest = (message?: string): APIGatewayProxyStructuredResultV2 => {
     return {
         statusCode: 400,
         headers: {
@@ -10,7 +10,7 @@ export const badRequest = (message?: string): APIGatewayProxyResultV2 => {
     }
 };
 
-export const ok = <TBody>(body?: TBody): APIGatewayProxyResultV2 => {
+export const ok = <TBody>(body?: TBody): APIGatewayProxyStructuredResultV2 => {
     return {
         statusCode: 200,
         headers: {

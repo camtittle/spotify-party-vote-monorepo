@@ -1,22 +1,11 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
 
-provider "aws" {
-  region = "eu-west-1"
-}
 
 resource "aws_s3_bucket" "packages" {
   bucket = "${var.project}-${var.environment}-packages"
   acl    = "private"
 }
 
-# Lambda execution role
+# Lambda execution role
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.project}-${var.environment}-lambdaExecutionRole"
 

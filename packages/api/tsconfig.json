@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["reflect-metadata", "node"],
+    "types": ["reflect-metadata", "node", "mocha"],
   },
   "references": [
     { "path": "../core" }

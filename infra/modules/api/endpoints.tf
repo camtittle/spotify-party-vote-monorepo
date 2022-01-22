@@ -1,9 +1,9 @@
  module "start_round_endpoint" {
-     source = "./lambda_endpoint"
+     source = "../lambda_endpoint"
      project = var.project
      environment = var.environment
      name = "startRound"
-     code_path = "${path.module}/../packages/api/dist/startRound.js"
+     code_path = "${path.module}/../../../packages/api/dist/startRound.js"
      handler = "startRound.handler"
      route_key = "POST /round"
      s3_bucket_id = aws_s3_bucket.packages.id

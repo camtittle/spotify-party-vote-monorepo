@@ -53,7 +53,7 @@ export class VoteRepository extends IVoteRepository {
     
     public async addVote(partyId: string, roundId: string, trackId: string, nickname: string): Promise<void> {
         console.log(`Adding vote for round ID ${roundId} track ID ${trackId} from user ${nickname}`);
-        const updateExpression = `SET #n = list_append(#n, :nickname), #vc = #vc + :v`;
+        const updateExpression = `SET #n = list_append(#n, :nicknames), #vc = #vc + :v`;
         const params: DocumentClient.UpdateItemInput = {
             TableName: this.getTableName(),
             Key: {
@@ -67,7 +67,8 @@ export class VoteRepository extends IVoteRepository {
                 '#vc': 'voteCount'
             },
             ExpressionAttributeValues: {
-                ':nickname': [nickname],
+                ':nicknames': [nickname],
+                ':nickname': nickname,
                 ':v': 1
             }
         }

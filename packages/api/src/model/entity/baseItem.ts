@@ -1,4 +1,4 @@
 export interface BaseItem {
     partitionKey: string;
-    sortKey: string;
+    sortKey?: string;
 }
