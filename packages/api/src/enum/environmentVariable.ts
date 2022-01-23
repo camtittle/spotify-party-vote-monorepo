@@ -1,3 +1,5 @@
 export enum EnvironmentVariable {
-    DynamoDbTableName = 'DynamoDbTableName'
+    DynamoDbTableName = 'DynamoDbTableName',
+    SpotifyRedirectUri = 'SpotifyRedirectUri',
+    SpotifyClientSecret = 'SpotifyClientSecret'
 }

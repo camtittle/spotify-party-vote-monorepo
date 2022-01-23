@@ -3,4 +3,5 @@ export const playNextTrack = () => {
     // Sets hue light
     // Wait a few seconds
     // Plays the winning track on Spotify
+    // Mark track as played
 }

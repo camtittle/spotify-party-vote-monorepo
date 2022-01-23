@@ -8,5 +8,5 @@
     },
     "include": [
         "./src/**/*"
-, "../api/src/models/entities"    ]
+    ]
 }
