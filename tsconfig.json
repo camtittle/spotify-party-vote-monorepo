@@ -10,6 +10,7 @@
       "preserveConstEnums": true,
       "sourceMap": true,
       "esModuleInterop": true,
-      "composite": true
+      "composite": true,
+      "jsx": "react"
     }
   }

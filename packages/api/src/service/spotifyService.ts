@@ -34,7 +34,7 @@ export class SpotifyService extends ISpotifyService {
 
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': authHeaderB64
+            'Authorization': `Basic ${authHeaderB64}`
         };
         const options: AxiosRequestConfig = {
             method: 'POST',

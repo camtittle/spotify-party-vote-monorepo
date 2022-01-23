@@ -5,7 +5,8 @@ import { ISpotifyService } from "../../../interface/ISpotifyService";
 import { IEnvironmentHelper } from "../../../interface/IEnvironmentHelper";
 import { APIGatewayEvent, APIGatewayProxyStructuredResultV2, Context } from "aws-lambda";
 import { badRequest, ok } from "../../../util/responseHelper";
-import { GetSpotifyTokenRequest } from "@spotify-party-vote/core";
+import { GetSpotifyTokenRequest, GetSpotifyTokenResponse } from "@spotify-party-vote/core";
+import { getDiContainer } from "./getSpotifyToken.di";
 
 @injectable()
 class GetSpotifyToken {
@@ -29,8 +30,16 @@ class GetSpotifyToken {
 
         const spotifyCredentials = await this.spotifyService.getAuthToken(body.code);
 
-        return ok(spotifyCredentials);
+        const response: GetSpotifyTokenResponse = {
+            accessToken: spotifyCredentials.accessToken,
+            refreshToken: spotifyCredentials.refreshToken,
+            expiresAt: spotifyCredentials.expiresAt.toISOString()
+        };
+
+        return ok(response);
     }
 }
 
-export { GetSpotifyToken };
+const handler = getDiContainer().get(GetSpotifyToken).handler;
+
+export { GetSpotifyToken, handler };
