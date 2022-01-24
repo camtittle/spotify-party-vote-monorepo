@@ -1,25 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Home } from "./components/pages/Home";
+import { SpotifyCallback } from "./components/pages/SpotifyCallback";
+import { LoginWithSpotify } from "./components/pages/LoginWithSpotify";
+import { SpotifyCredentialsProvider } from "./contexts/spotifyCredentialsContext";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <SpotifyCredentialsProvider>
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/spotify/login" element={<LoginWithSpotify />} />
+                  <Route path="spotify/callback" element={<SpotifyCallback />} />
+              </Routes>
+          </BrowserRouter>
+      </SpotifyCredentialsProvider>
   );
 }
 

@@ -4,6 +4,13 @@
 resource "aws_apigatewayv2_api" "apigw" {
   name          = "${var.project}-${var.environment}-apigw"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_credentials = true
+    allow_origins = var.cors_allow_origins
+    allow_methods = ["*"]
+    allow_headers = ["Authorization", "Content-Type"]
+  }
 }
 
 resource "aws_apigatewayv2_stage" "apigw" {

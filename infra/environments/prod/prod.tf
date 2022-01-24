@@ -25,4 +25,7 @@ module "api" {
   environment = "prod"
   spotify_client_secret = var.spotify_client_secret
   spotify_redirect_uri = var.spotify_redirect_uri
+  cors_allow_origins = [
+    "http://localhost:3000"
+  ]
 }

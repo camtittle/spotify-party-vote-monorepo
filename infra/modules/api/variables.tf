@@ -13,3 +13,7 @@ variable "spotify_client_secret" {
 variable "spotify_redirect_uri" {
     type = string
 }
+
+variable "cors_allow_origins" {
+    type = list(string)
+}
