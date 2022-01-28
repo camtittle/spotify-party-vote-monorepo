@@ -4,7 +4,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { IEnvironmentHelper } from "../interface/IEnvironmentHelper";
 import { EnvironmentHelper } from "../util/environmentHelper";
 import { EnvironmentVariable } from "../enum/environmentVariable";
-import { PartyEntity } from "../model/entity/party";
+import { PartyEntity, SpotifyCredentials } from "../model/entity/party";
 import { DbItemType } from "../enum/dbItemType";
 
 @injectable()
@@ -25,24 +25,21 @@ export class PartyRepository extends IPartyRepository {
         return `${DbItemType.Party}#${partyId}`;
     }
 
-    public async updateActiveRound(partyId: string, roundId: string): Promise<PartyEntity> {
-        const party: PartyEntity = {
-            partitionKey: this.getPartitionKey(partyId),
-            sortKey: partyId,
-            partyId: partyId,
-            activeRoundId: roundId,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        }
-
-        const params: DocumentClient.PutItemInput = {
+    public async updateActiveRound(partyId: string, roundId: string): Promise<void> {
+        const params: DocumentClient.UpdateItemInput = {
             TableName: this.getTableName(),
-            Item: party
+            Key: {
+                partitionKey: this.getPartitionKey(partyId),
+                sortKey: partyId
+            },
+            UpdateExpression: 'SET activeRoundId = :roundId, updatedAt = :updatedAt',
+            ExpressionAttributeValues: {
+                ':roundId': roundId,
+                ':updatedAt': new Date().toISOString()
+            }
         };
 
-        await this.documentClient.put(params).promise();
-
-        return party;
+        await this.documentClient.update(params).promise();
     }
 
     public async getParty(partyId: string): Promise<PartyEntity> {
@@ -63,5 +60,29 @@ export class PartyRepository extends IPartyRepository {
         }
 
         return result.Item as PartyEntity;
+    }
+
+    public async createParty(partyId: string, spotifyCredentials: SpotifyCredentials): Promise<PartyEntity> {
+        const party: PartyEntity = {
+            partitionKey: this.getPartitionKey(partyId),
+            sortKey: partyId,
+            partyId: partyId,
+            spotifyCredentials: {
+                accessToken: spotifyCredentials.accessToken,
+                refreshToken: spotifyCredentials.refreshToken,
+                expiresAt: spotifyCredentials.expiresAt
+            },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        }
+
+        const params: DocumentClient.PutItemInput = {
+            TableName: this.getTableName(),
+            Item: party
+        };
+
+        await this.documentClient.put(params).promise();
+
+        return party;
     }
 }

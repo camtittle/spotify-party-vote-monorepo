@@ -2,19 +2,18 @@ import 'reflect-metadata';
 import { inject, injectable } from "inversify";
 import { IPartyRepository } from "../../../interface/IPartyRepository";
 import { ISpotifyService } from "../../../interface/ISpotifyService";
-import { IEnvironmentHelper } from "../../../interface/IEnvironmentHelper";
 import { APIGatewayEvent, APIGatewayProxyStructuredResultV2, Context } from "aws-lambda";
 import { badRequest, ok } from "../../../util/responseHelper";
-import { GetSpotifyTokenRequest, GetSpotifyTokenResponse } from "@spotify-party-vote/core";
-import { getDiContainer } from "./getSpotifyToken.di";
+import { CreatePartyResponse, CreatePartyRequest } from "@spotify-party-vote/core";
+import { getDiContainer } from "./createParty.di";
+import { config } from "../../../config/config";
 
 @injectable()
-class GetSpotifyToken {
+class CreateParty {
 
     constructor(
         @inject(ISpotifyService) private spotifyService: ISpotifyService,
-        @inject(IPartyRepository) private partyRepository: IPartyRepository,
-        @inject(IEnvironmentHelper) private environmentHelper: IEnvironmentHelper
+        @inject(IPartyRepository) private partyRepository: IPartyRepository
     ) {
     }
 
@@ -23,23 +22,28 @@ class GetSpotifyToken {
             return badRequest('Body required');
         }
 
-        const body = JSON.parse(event.body) as GetSpotifyTokenRequest;
+        const body = JSON.parse(event.body) as CreatePartyRequest;
         if (!body.code) {
             return badRequest('Code required');
         }
 
         const spotifyCredentials = await this.spotifyService.getAuthToken(body.code);
 
-        const response: GetSpotifyTokenResponse = {
+        const party = await this.partyRepository.createParty(config.partyId, {
             accessToken: spotifyCredentials.accessToken,
             refreshToken: spotifyCredentials.refreshToken,
             expiresAt: spotifyCredentials.expiresAt.toISOString()
+        });
+
+        const response: CreatePartyResponse = {
+            partyId: party.partyId,
+
         };
 
         return ok(response);
     }
 }
 
-const handler = getDiContainer().get(GetSpotifyToken).handler;
+const handler = getDiContainer().get(CreateParty).handler;
 
-export { GetSpotifyToken, handler };
+export { CreateParty, handler };

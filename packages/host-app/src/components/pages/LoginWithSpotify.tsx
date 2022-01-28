@@ -1,4 +1,3 @@
-import { useSpotifyCredentials } from "../../contexts/spotifyCredentialsContext";
 import buildUrl from 'build-url';
 
 const spotifyAuthBaseUrl = 'https://accounts.spotify.com';
@@ -9,7 +8,6 @@ const scopes = [
 const responseCode = 'code';
 
 export const LoginWithSpotify = () => {
-    const { spotifyCredentials } = useSpotifyCredentials();
 
     const redirectToSpotify = (): undefined => {
         const url = buildUrl(spotifyAuthBaseUrl, {

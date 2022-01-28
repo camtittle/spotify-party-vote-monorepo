@@ -1,25 +1,19 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import {  } from 'react-router';
 import queryString from "query-string";
 import { useEffect, useState } from "react";
-import { GetSpotifyTokenResponse } from "@spotify-party-vote/core";
-import { SpotifyService } from "../../api/spotifyService";
-import { useSpotifyCredentials } from "../../contexts/spotifyCredentialsContext";
+import { useParty } from "../../contexts/partyContext";
+import { PartyService } from "../../api/partyService";
 
 export const SpotifyCallback = () => {
 
     const location = useLocation();
-    const navigation = useNavigate();
-    const { spotifyCredentials, setSpotifyCredentials } = useSpotifyCredentials()
+    const navigate = useNavigate();
+    const { party, setParty } = useParty()
 
     const params = queryString.parse(location.search);
     const code = params.code as string;
 
     const [error, setError] = useState<string>();
-
-    const exchangeToken = async (code: string): Promise<GetSpotifyTokenResponse> => {
-        return await SpotifyService.getAccessToken(code);
-    }
 
     const handleAuth = async (code: string) => {
         const codeIsValid = code !== undefined && code !== null;
@@ -30,15 +24,15 @@ export const SpotifyCallback = () => {
         }
 
         try {
-            const result = await exchangeToken(code);
-            setSpotifyCredentials(result);
-            if (result) {
-                console.log(result);
-                navigation('/');
+            const response = await PartyService.createParty(code);
+            setParty(response.party);
+            if (response.party) {
+                console.log(response.party);
+                navigate('/');
             }
         } catch (error) {
             console.error(error);
-            setSpotifyCredentials(undefined);
+            setParty(undefined);
             setError('An error occurred connecting to Spotify. Please try again.');
         }
     }

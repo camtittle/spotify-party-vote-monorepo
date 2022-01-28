@@ -37,9 +37,9 @@
       project = var.project
       environment = var.environment
       name = "getSpotifyToken"
-      code_path = "${path.module}/../../../packages/api/dist/getSpotifyToken.js"
-      handler = "getSpotifyToken.handler"
-      route_key = "POST /spotify/token"
+      code_path = "${path.module}/../../../packages/api/dist/createParty.js"
+      handler = "createParty.handler"
+      route_key = "POST /party"
       s3_bucket_id = aws_s3_bucket.packages.id
       lambda_execution_role_arn = aws_iam_role.lambda_exec.arn
       apigateway_api_id = aws_apigatewayv2_api.apigw.id

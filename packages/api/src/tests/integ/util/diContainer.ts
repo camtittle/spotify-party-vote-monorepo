@@ -13,7 +13,7 @@ import { IEnvironmentHelper } from "../../../interface/IEnvironmentHelper";
 import { IRoundRepository } from "../../../interface/IRoundRepository";
 import { TrackRepository } from "../../../repository/trackRepository";
 import { GetParty } from "../../../function/guest/getParty/getParty";
-import { GetSpotifyToken } from "../../../function/host/getSpotifyToken/getSpotifyToken";
+import { CreateParty } from "../../../function/host/createParty/createParty";
 import { ISpotifyService } from "../../../interface/ISpotifyService";
 import { SpotifyService } from "../../../service/spotifyService";
 
@@ -23,7 +23,7 @@ const container = new Container();
 // Controllers
 container.bind(StartRound).to(StartRound);
 container.bind(GetParty).to(GetParty);
-container.bind(GetSpotifyToken).to(GetSpotifyToken);
+container.bind(CreateParty).to(CreateParty);
 
 // Repos
 container.bind(IVoteRepository).to(VoteRepository);

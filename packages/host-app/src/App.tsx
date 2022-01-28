@@ -3,11 +3,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./components/pages/Home";
 import { SpotifyCallback } from "./components/pages/SpotifyCallback";
 import { LoginWithSpotify } from "./components/pages/LoginWithSpotify";
-import { SpotifyCredentialsProvider } from "./contexts/spotifyCredentialsContext";
+import { PartyProvider } from "./contexts/partyContext";
 
 function App() {
   return (
-      <SpotifyCredentialsProvider>
+      <PartyProvider>
           <BrowserRouter>
               <Routes>
                   <Route path="/" element={<Home />} />
@@ -15,7 +15,7 @@ function App() {
                   <Route path="spotify/callback" element={<SpotifyCallback />} />
               </Routes>
           </BrowserRouter>
-      </SpotifyCredentialsProvider>
+      </PartyProvider>
   );
 }
 

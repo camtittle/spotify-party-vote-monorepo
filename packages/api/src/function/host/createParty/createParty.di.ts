@@ -7,11 +7,11 @@ import { IPartyRepository } from "../../../interface/IPartyRepository";
 import { PartyRepository } from "../../../repository/partyRepository";
 import { ISpotifyService } from "../../../interface/ISpotifyService";
 import { SpotifyService } from "../../../service/spotifyService";
-import { GetSpotifyToken } from "./getSpotifyToken";
+import { CreateParty } from "./createParty";
 
 export const getDiContainer = () => {
     const container = new Container();
-    container.bind(GetSpotifyToken).to(GetSpotifyToken);
+    container.bind(CreateParty).to(CreateParty);
     container.bind(IPartyRepository).to(PartyRepository);
     container.bind(ISpotifyService).to(SpotifyService);
     container.bind(IEnvironmentHelper).to(EnvironmentHelper);

@@ -1,5 +1,5 @@
 import { Party } from "./party";
 
-export interface GetPartyResponse {
+export interface CreatePartyResponse {
     party: Party;
 }
