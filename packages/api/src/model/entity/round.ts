@@ -7,4 +7,5 @@ export interface RoundEntity extends BaseItem {
     tracks: TrackEntity[];
     createdAt: string;
     updatedAt: string;
+    endsAt: string;
 }

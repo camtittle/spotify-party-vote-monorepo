@@ -23,8 +23,19 @@ export class VoteRepository extends IVoteRepository {
         return `${DbItemType.Vote}#${partyId}#${roundId}`;
     }
 
-    getVotes(partyId: string, roundId: string, trackId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    public async getVotes(partyId: string, roundId: string): Promise<VotesEntity[]> {
+        console.log(`Getting votes for party ${partyId} round ${roundId}`);
+
+        const params: DocumentClient.QueryInput = {
+            TableName: this.getTableName(),
+            KeyConditionExpression: `partitionKey = :partitionKeyVal`,
+            ExpressionAttributeValues: {
+                ':partitionKeyVal': this.getPartitionKey(partyId, roundId)
+            }
+        };
+
+        const result = await this.documentClient.query(params).promise();
+        return result.Items as VotesEntity[];
     }
 
     public async createVote(partyId: string, roundId: string, track: TrackEntity): Promise<VotesEntity> {

@@ -26,8 +26,8 @@ describe('startRound', () => {
         };
         const createRequest: APIGatewayEvent = buildApiGatewayEvent().withBody(body);
 
-        const startRoundResponse = await startRoundHandler(createRequest, undefined);
-        const round = JSON.parse(startRoundResponse.body) as StartRoundResponse;
+        const startRoundHandlerResponse = await startRoundHandler(createRequest, undefined);
+        const round = (JSON.parse(startRoundHandlerResponse.body) as StartRoundResponse).round;
 
         // Now get the party
         const request: APIGatewayEvent = buildApiGatewayEvent().withQueryParameters({
@@ -39,8 +39,8 @@ describe('startRound', () => {
         expect(response.statusCode).to.equal(200);
 
         const responseBody = JSON.parse(response.body) as GetPartyResponse;
-        expect(responseBody.partyId).to.equal('testPartyId');
-        expect(responseBody.activeRound.roundId).to.equal(round.roundId);
+        expect(responseBody.party.partyId).to.equal('testPartyId');
+        expect(responseBody.party.activeRound.roundId).to.equal(round.roundId);
     });
 
 });

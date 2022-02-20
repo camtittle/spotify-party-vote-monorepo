@@ -1,0 +1,128 @@
+import { Round } from "../../models/round";
+import { useEffect, useState } from "react";
+import { TrackVotes } from "@spotify-party-vote/core";
+import { Track } from "../../models/track";
+import styled from "styled-components";
+import { VotesBar } from "./VotesBar";
+import { VoteService } from "../../api/voteService";
+
+interface Props {
+  round: Round;
+}
+
+type MetadataMap = { [trackId: string]: Track };
+type VotesMap = { [trackId: string]: TrackVotes };
+
+const Container = styled.div`
+  padding-top: 23px;
+`
+
+const Header = styled.h1`
+  font-size: 80px;
+  color: #F8F8F8;
+  margin: 8px 0;
+`;
+
+const TracksList = styled.div`
+  width: 100%;
+`;
+
+const TrackItem = styled.div`
+  width: 100%;
+  background-color: #222222;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 24px 26px;
+`;
+
+const MetadataContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Metadata = styled.div`
+  margin-left: 30px;
+  font-size: 28px;
+  color: #D1D1D1;
+`;
+
+const Title = styled.div`
+  margin-bottom: 4px;
+  font-weight: 500;
+`;
+
+const Artwork = styled.img` 
+  width: 100px;
+  height: 100px;
+`;
+
+export const VoteResults = ({ round }: Props) => {
+
+  const [votes, setVotes] = useState<VotesMap>();
+  const [metadata, setMetadata] = useState<MetadataMap>();
+
+  // Fetch track votes
+  useEffect(() => {
+    const fetchVotes = async () => {
+      const votesResponse = await VoteService.getVotes(round.partyId, round.roundId);
+      const map: VotesMap = votesResponse.reduce((map, trackVotes) => {
+        map[trackVotes.trackId] = trackVotes;
+        return map;
+      }, {} as VotesMap);
+      setVotes(map);
+    };
+    fetchVotes();
+  }, []);
+
+  // Update map of track metadata
+  useEffect(() => {
+    const map: MetadataMap = round.tracks.reduce((map, track) => {
+      map[track.trackId] = track;
+      return map;
+    }, {} as MetadataMap);
+    setMetadata(map);
+  }, [round.tracks]);
+
+  // replace with loading spinner
+  if (!metadata) return null;
+  if (!votes) return null;
+
+  const totalVotes = Object.values(votes).reduce((sum, vote) => {
+    return sum + vote.voteCount;
+  }, 0);
+
+  const sortedTracks = Object.values(votes).map(trackVotes => ({
+    ...trackVotes,
+    votePercentage: totalVotes > 0 ? ((trackVotes.voteCount * 1.0) / totalVotes) : 0
+  })).sort((a, b) => b.votePercentage - a.votePercentage);
+
+  const trackItems = sortedTracks.map((trackVotes, index) => {
+    const trackMetadata = metadata[trackVotes.trackId];
+
+    return (
+      <TrackItem key={trackVotes.trackId}>
+        <MetadataContainer>
+          <Artwork src={trackMetadata.artworkUrl} />
+          <Metadata>
+            <Title>{trackMetadata.title}</Title>
+            <div>{trackMetadata.artist}</div>
+          </Metadata>
+        </MetadataContainer>
+        <VotesBar place={index} percentage={trackVotes.votePercentage} >
+          <div>{trackVotes.voteCount} {trackVotes.voteCount === 1 ? 'vote' : 'votes'}</div>
+        </VotesBar>
+      </TrackItem>
+    );
+  });
+
+  return (
+    <Container>
+      <Header>Next Eurovision song to play...</Header>
+      <TracksList>
+        {trackItems}
+      </TracksList>
+    </Container>
+  )
+
+};

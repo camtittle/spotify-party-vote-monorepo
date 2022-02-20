@@ -8,6 +8,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import { EnvironmentHelper } from "../util/environmentHelper";
 import { IEnvironmentHelper } from "../interface/IEnvironmentHelper";
 import { EnvironmentVariable } from "../enum/environmentVariable";
+import addMinutes from 'date-fns/addMinutes';
 
 @injectable()
 export class RoundRepository extends IRoundRepository {
@@ -31,12 +32,14 @@ export class RoundRepository extends IRoundRepository {
         console.log(`Creating round for party ${partyId} with tracks ${tracks.map(x => x.title).join(', ')}`);
         console.log(`table name: ${this.getTableName()}`);
         const roundId = uuid();
+        const endsAt = addMinutes(new Date(), 30);
         const round: RoundEntity = {
             partitionKey: this.getPartitionKey(partyId),
             sortKey: roundId,
             partyId: partyId,
             roundId: roundId,
             tracks: tracks,
+            endsAt: endsAt.toISOString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         }
@@ -53,6 +56,10 @@ export class RoundRepository extends IRoundRepository {
 
     public async getRound(partyId: string, roundId: string): Promise<RoundEntity> {
         console.log(`Getting round with Id ${roundId} for partyId ${partyId}`);
+
+        if (!roundId) {
+            throw new Error('RoundRepository:getRound - Round ID required');
+        }
 
         const params: DocumentClient.GetItemInput = {
             TableName: this.getTableName(),

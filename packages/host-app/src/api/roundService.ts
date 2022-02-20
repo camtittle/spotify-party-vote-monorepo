@@ -1,4 +1,4 @@
-import { StartRoundRequest, StartRoundResponse } from "@spotify-party-vote/core";
+import { StartRoundRequest, StartRoundResponse, TrackVotes } from "@spotify-party-vote/core";
 import { Round } from "../models/round";
 import { buildApiRequest } from "./apiService";
 
@@ -10,6 +10,8 @@ export namespace RoundService {
     }
 
     export const startRound = async (partyId: string): Promise<Round> => {
+        console.log('Starting round');
+
         const request: StartRoundRequest = {
             partyId
         };
@@ -19,9 +21,10 @@ export namespace RoundService {
             .send();
 
         return {
-            partyId: response.partyId,
-            roundId: response.roundId,
-            tracks: response.tracks.map(t => ({
+            partyId: response.round.partyId,
+            roundId: response.round.roundId,
+            endsAt: new Date(response.round.endsAt),
+            tracks: response.round.tracks.map(t => ({
                 trackId: t.trackId,
                 title: t.title,
                 artist: t.artist,

@@ -36,8 +36,9 @@ class CreateParty {
         });
 
         const response: CreatePartyResponse = {
-            partyId: party.partyId,
-
+            party: {
+                partyId: party.partyId,
+            }
         };
 
         return ok(response);

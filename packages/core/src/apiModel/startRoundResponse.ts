@@ -1,7 +1,6 @@
 import { Track } from "./track";
+import { Round } from "./round";
 
 export interface StartRoundResponse {
-    partyId: string;
-    roundId: string;
-    tracks: Track[];
+    round: Round;
 }

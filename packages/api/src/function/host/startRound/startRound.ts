@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { APIGatewayEvent, APIGatewayProxyResultV2, APIGatewayProxyStructuredResultV2, Context } from "aws-lambda";
+import { APIGatewayEvent, APIGatewayProxyStructuredResultV2, Context } from "aws-lambda";
 import { inject, injectable } from "inversify";
 import { getDiContainer } from './startRound.di';
 import { IVoteRepository } from '../../../interface/IVoteRepository';
@@ -51,7 +51,20 @@ class StartRound {
         // Set current round on party
         await this.partyRepository.updateActiveRound(partyId, round.roundId);
 
-        const response = round as StartRoundResponse;
+        const response: StartRoundResponse = {
+            round: {
+                roundId: round.roundId,
+                partyId: round.partyId,
+                endsAt: round.endsAt,
+                tracks: round.tracks.map(track => ({
+                    trackId: track.trackId,
+                    artist: track.artist,
+                    artworkUrl: track.artworkUrl,
+                    title: track.title
+                }))
+            }
+        }
+
         return ok(response);
     }
 }

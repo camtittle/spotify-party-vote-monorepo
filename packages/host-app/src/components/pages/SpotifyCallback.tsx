@@ -24,10 +24,10 @@ export const SpotifyCallback = () => {
         }
 
         try {
-            const response = await PartyService.createParty(code);
-            setParty(response.party);
-            if (response.party) {
-                console.log(response.party);
+            const createdParty = await PartyService.createParty(code);
+            setParty(createdParty);
+            if (createdParty) {
+                console.log(createdParty);
                 navigate('/');
             }
         } catch (error) {

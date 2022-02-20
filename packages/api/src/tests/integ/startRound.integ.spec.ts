@@ -40,7 +40,7 @@ describe('startRound', () => {
 
 
         // Response matches ROUND item
-        const responseBody = JSON.parse(response.body) as StartRoundResponse;
+        const responseBody = (JSON.parse(response.body) as StartRoundResponse).round;
         const roundDbItem = items.filter(x => x.partitionKey.startsWith('ROUND'))[0] as RoundEntity;
         expect(responseBody.roundId).to.equal(roundDbItem.roundId);
         expect(responseBody.partyId).to.equal(roundDbItem.partyId);

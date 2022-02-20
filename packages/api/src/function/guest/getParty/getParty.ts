@@ -17,7 +17,7 @@ class GetParty {
     }
 
     public handler = async (event: APIGatewayEvent, context: Context): Promise<APIGatewayProxyStructuredResultV2> => {
-        const partyId = event.queryStringParameters.partyId;
+        const partyId = event.pathParameters.partyId;
 
         if (!partyId) {
             return badRequest('partyId required in query string parameters');
@@ -29,13 +29,18 @@ class GetParty {
             return notFound('Party not found');
         }
 
-        const activeRound = await this.roundRepository.getRound(partyId, party.activeRoundId);
-
         const response: GetPartyResponse = {
-            partyId: partyId,
-            activeRound: activeRound ? {
+            party: {
+                partyId: partyId,
+            }
+        };
+
+        if (party.activeRoundId) {
+            const activeRound = await this.roundRepository.getRound(partyId, party.activeRoundId);
+            response.party.activeRound = activeRound ? {
                 partyId: activeRound.partyId,
                 roundId: activeRound.roundId,
+                endsAt: activeRound.endsAt,
                 tracks: activeRound.tracks.map(track => ({
                     trackId: track.trackId,
                     artist: track.artist,
@@ -43,7 +48,7 @@ class GetParty {
                     artworkUrl: track.artworkUrl
                 }))
             } : undefined
-        };
+        }
 
         return ok(response);
     }

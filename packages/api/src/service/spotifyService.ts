@@ -57,5 +57,9 @@ export class SpotifyService extends ISpotifyService {
         };
     }
 
+    public async playTrack(trackId: string, credentials: SpotifyCredentials): Promise<void> {
+
+    }
+
 
 }

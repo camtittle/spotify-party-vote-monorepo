@@ -30,7 +30,14 @@ const loadStoredParty = (): Party | undefined => {
     if (!item) {
         return undefined;
     }
-    return JSON.parse(item);
+    const parsed = JSON.parse(item) as Party;
+    return {
+        ...parsed,
+        activeRound: parsed.activeRound && {
+            ...parsed.activeRound,
+            endsAt: new Date(parsed.activeRound.endsAt)
+        }
+    };
 }
 
 const storedParty = loadStoredParty();
