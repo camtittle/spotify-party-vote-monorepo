@@ -1,13 +1,14 @@
 import { useParty } from "../../contexts/partyContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PartyService } from "../../api/partyService";
 import { RoundService } from "../../api/roundService";
 import styled from "styled-components";
 import { QrCode } from "../shared/QrCode";
 import { VoteResults } from "../shared/VoteResults";
 import { Countdown } from "../shared/Countdown";
-import { addMinutes } from "date-fns";
+import { Track } from "../../models/track";
+import { WinnerModal } from "../shared/WinnerModal";
 
 const Column = styled.div`
   display: inline-block;
@@ -24,11 +25,26 @@ const RightColumn = styled(Column)`
   width: 25%;
 `;
 
-const tempEndsAtDate = addMinutes(new Date(), 30);
+const winningModalDurationSeconds = 10;
 
 export const Party = () => {
    const { party, setParty } = useParty();
+   const [ winningTrack, setWinningTrack ] = useState<Track>();
    const navigate = useNavigate();
+
+   const startNewRound = async () => {
+      if (!party) {
+         console.error('Cannot start round without active party');
+         return;
+      }
+
+      const round = await RoundService.startRound(party.partyId);
+      setParty({
+         ...party,
+         activeRound: round
+      });
+      setWinningTrack(undefined);
+   }
 
    useEffect(() => {
       if (!party) {
@@ -51,16 +67,31 @@ export const Party = () => {
 
       // Start a round if there is not one active
       if (!party.activeRound) {
-         RoundService.startRound(party.partyId).then(round => {
-            setParty({
-               ...party,
-               activeRound: round
-            });
-         });
+         startNewRound();
+      }
+   }, [party?.activeRound]);
+
+   useEffect(() => {
+      if (winningTrack) {
+         const timeout = setTimeout(() => {
+            startNewRound();
+         }, winningModalDurationSeconds * 1000);
+
+         return () => {
+            clearTimeout(timeout);
+         }
+      }
+   }, [winningTrack]);
+
+   const finishRound = async () => {
+      if (!party || !party.activeRound) {
+         console.error('Cannot finish round - no active party/round');
+         return;
       }
 
-      console.log(party);
-   }, [party?.activeRound])
+      const winningTrack = await RoundService.finishRound(party.partyId, party.activeRound.roundId);
+      setWinningTrack(winningTrack);
+   }
 
    if (!party?.activeRound) {
       return (
@@ -68,15 +99,20 @@ export const Party = () => {
       );
    }
 
+   const showClock = !winningTrack;
+
    return (
        <div>
           <LeftColumn>
-             <Countdown endsAt={party.activeRound.endsAt} />
+             <Countdown endsAt={showClock ? party.activeRound.endsAt : undefined} onTimerFinish={finishRound}/>
              <VoteResults round={party.activeRound} />
           </LeftColumn>
           <RightColumn>
              <QrCode />
+             <button onClick={finishRound}>Finish round</button>
           </RightColumn>
+
+          { winningTrack ? <WinnerModal track={winningTrack} /> : null }
        </div>
    );
 }

@@ -8,16 +8,16 @@ import { Party } from "./components/pages/Party";
 
 function App() {
   return (
-      <PartyProvider>
-          <BrowserRouter>
-              <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/spotify/login" element={<LoginWithSpotify />} />
-                  <Route path="spotify/callback" element={<SpotifyCallback />} />
-                  <Route path="/party" element={<Party />} />
-              </Routes>
-          </BrowserRouter>
-      </PartyProvider>
+    <PartyProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/spotify/login" element={<LoginWithSpotify/>}/>
+          <Route path="spotify/callback" element={<SpotifyCallback/>}/>
+          <Route path="/party" element={<Party/>}/>
+        </Routes>
+      </BrowserRouter>
+    </PartyProvider>
   );
 }
 

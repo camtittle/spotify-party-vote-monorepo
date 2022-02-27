@@ -24,13 +24,14 @@
   },
   "dependencies": {
     "@spotify-party-vote/core": "workspace:*",
+    "@types/spotify-web-api-node": "^5.0.7",
     "aws-sdk": "^2.1058.0",
     "axios": "^0.25.0",
     "date-fns": "^2.28.0",
     "inversify": "^6.0.1",
     "qs": "^6.10.3",
     "reflect-metadata": "^0.1.13",
-    "spotify-web-api-js": "^1.5.2",
+    "spotify-web-api-node": "^5.0.2",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"
   }

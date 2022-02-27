@@ -6,6 +6,7 @@ export interface TrackEntity extends BaseItem {
     title: string;
     artist: string;
     artworkUrl: string;
+    playedAt?: string;
     createdAt: string;
     updatedAt: string;
 }

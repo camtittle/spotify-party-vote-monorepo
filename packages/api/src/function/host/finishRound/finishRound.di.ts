@@ -12,6 +12,8 @@ import { TrackRepository } from "../../../repository/trackRepository";
 import { IPartyRepository } from "../../../interface/IPartyRepository";
 import { PartyRepository } from "../../../repository/partyRepository";
 import { FinishRound } from "./finishRound";
+import { ISpotifyService } from "../../../interface/ISpotifyService";
+import { SpotifyService } from "../../../service/spotifyService";
 
 export const getDiContainer = () => {
     const container = new Container();
@@ -20,6 +22,7 @@ export const getDiContainer = () => {
     container.bind(IRoundRepository).to(RoundRepository);
     container.bind(ITrackRepository).to(TrackRepository);
     container.bind(IPartyRepository).to(PartyRepository);
+    container.bind(ISpotifyService).to(SpotifyService);
     container.bind(IEnvironmentHelper).to(EnvironmentHelper);
     container.bind(DocumentClient).toConstantValue(GetDocumentClient());
     return container;

@@ -10,6 +10,17 @@ export const badRequest = (message?: string): APIGatewayProxyStructuredResultV2 
     }
 };
 
+export const internalError = (message?: string): APIGatewayProxyStructuredResultV2 => {
+    return {
+        statusCode: 500,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: message
+    }
+};
+
+
 export const ok = <TBody>(body?: TBody): APIGatewayProxyStructuredResultV2 => {
     return {
         statusCode: 200,

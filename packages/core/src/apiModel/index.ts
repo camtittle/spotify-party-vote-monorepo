@@ -5,3 +5,4 @@ export * from './createPartyRequest';
 export * from './createPartyResponse';
 export * from './setTracksRequest';
 export * from './trackVotes';
+export * from './finishRoundResponse';

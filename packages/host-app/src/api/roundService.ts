@@ -1,12 +1,13 @@
-import { StartRoundRequest, StartRoundResponse, TrackVotes } from "@spotify-party-vote/core";
+import { FinishRoundResponse, StartRoundRequest, StartRoundResponse, TrackVotes } from "@spotify-party-vote/core";
 import { Round } from "../models/round";
 import { buildApiRequest } from "./apiService";
+import { Track } from "../models/track";
 
 export namespace RoundService {
 
     enum Endpoint {
         StartRound = '/round',
-        GetRound = '/round/{roundId}'
+        FinishRound = '/round/finish/{partyId}/{roundId}'
     }
 
     export const startRound = async (partyId: string): Promise<Round> => {
@@ -32,5 +33,20 @@ export namespace RoundService {
             }))
         };
     };
+
+    export const finishRound = async (partyId: string, roundId: string): Promise<Track> => {
+        console.log('Finishing round');
+
+        const params = {
+          partyId,
+          roundId
+        }
+
+        const response = await buildApiRequest<FinishRoundResponse>('POST', Endpoint.FinishRound)
+          .withPathParams(params)
+          .send();
+
+        return response.track;
+    }
 
 }

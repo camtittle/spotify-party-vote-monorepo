@@ -25,7 +25,8 @@ export class PartyRepository extends IPartyRepository {
         return `${DbItemType.Party}#${partyId}`;
     }
 
-    public async updateActiveRound(partyId: string, roundId: string): Promise<void> {
+    public async updateActiveRound(partyId: string, roundId?: string): Promise<void> {
+        console.log(`Setting active round for party ${partyId} to ${roundId}`);
         const params: DocumentClient.UpdateItemInput = {
             TableName: this.getTableName(),
             Key: {
@@ -34,7 +35,24 @@ export class PartyRepository extends IPartyRepository {
             },
             UpdateExpression: 'SET activeRoundId = :roundId, updatedAt = :updatedAt',
             ExpressionAttributeValues: {
-                ':roundId': roundId,
+                ':roundId': roundId ? roundId : null,
+                ':updatedAt': new Date().toISOString()
+            }
+        };
+
+        await this.documentClient.update(params).promise();
+    }
+
+    public async updateSpotifyCredentials(partyId: string, spotifyCredentials: SpotifyCredentials): Promise<void> {
+        const params: DocumentClient.UpdateItemInput = {
+            TableName: this.getTableName(),
+            Key: {
+                partitionKey: this.getPartitionKey(partyId),
+                sortKey: partyId
+            },
+            UpdateExpression: 'SET spotifyCredentials = :spotifyCredentials, updatedAt = :updatedAt',
+            ExpressionAttributeValues: {
+                ':spotifyCredentials': spotifyCredentials,
                 ':updatedAt': new Date().toISOString()
             }
         };

@@ -7,6 +7,7 @@ import { badRequest, ok } from "../../../util/responseHelper";
 import { CreatePartyResponse, CreatePartyRequest } from "@spotify-party-vote/core";
 import { getDiContainer } from "./createParty.di";
 import { config } from "../../../config/config";
+import { mapToEntity } from "../../../model/dto/spotifyCredentials";
 
 @injectable()
 class CreateParty {
@@ -29,11 +30,7 @@ class CreateParty {
 
         const spotifyCredentials = await this.spotifyService.getAuthToken(body.code);
 
-        const party = await this.partyRepository.createParty(config.partyId, {
-            accessToken: spotifyCredentials.accessToken,
-            refreshToken: spotifyCredentials.refreshToken,
-            expiresAt: spotifyCredentials.expiresAt.toISOString()
-        });
+        const party = await this.partyRepository.createParty(config.partyId, mapToEntity(spotifyCredentials));
 
         const response: CreatePartyResponse = {
             party: {

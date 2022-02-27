@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import intervalToDuration from 'date-fns/intervalToDuration';
+import isAfter from 'date-fns/isAfter';
 import styled from "styled-components";
 
 const formatDuration = (duration: any) => {
@@ -14,14 +15,19 @@ const Clock = styled.div`
 `;
 
 interface Props {
-  endsAt: Date;
+  endsAt?: Date;
+  onTimerFinish: () => void;
 }
 
-export const Countdown = ({endsAt}: Props) => {
+export const Countdown = ({endsAt, onTimerFinish}: Props) => {
 
   const [remainingTime, setRemainingTime] = useState<string>();
 
   useEffect(() => {
+    if (!endsAt) {
+      return;
+    }
+
     console.log('setting timeout');
 
     const updateTime = () => {
@@ -31,6 +37,10 @@ export const Countdown = ({endsAt}: Props) => {
         end: endsAt
       });
       setRemainingTime(formatDuration(duration));
+
+      if (isAfter(now, endsAt)) {
+        onTimerFinish();
+      }
     }
 
     updateTime();
@@ -45,7 +55,7 @@ export const Countdown = ({endsAt}: Props) => {
   }, [endsAt]);
 
   return (
-    <Clock>{remainingTime}</Clock>
+    <Clock>{endsAt ? remainingTime : null}</Clock>
   )
 
 };

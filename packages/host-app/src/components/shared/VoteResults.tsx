@@ -5,6 +5,7 @@ import { Track } from "../../models/track";
 import styled from "styled-components";
 import { VotesBar } from "./VotesBar";
 import { VoteService } from "../../api/voteService";
+import { TrackDetails } from "./TrackDetails";
 
 interface Props {
   round: Round;
@@ -33,28 +34,6 @@ const TrackItem = styled.div`
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 24px 26px;
-`;
-
-const MetadataContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const Metadata = styled.div`
-  margin-left: 30px;
-  font-size: 28px;
-  color: #D1D1D1;
-`;
-
-const Title = styled.div`
-  margin-bottom: 4px;
-  font-weight: 500;
-`;
-
-const Artwork = styled.img` 
-  width: 100px;
-  height: 100px;
 `;
 
 export const VoteResults = ({ round }: Props) => {
@@ -102,13 +81,7 @@ export const VoteResults = ({ round }: Props) => {
 
     return (
       <TrackItem key={trackVotes.trackId}>
-        <MetadataContainer>
-          <Artwork src={trackMetadata.artworkUrl} />
-          <Metadata>
-            <Title>{trackMetadata.title}</Title>
-            <div>{trackMetadata.artist}</div>
-          </Metadata>
-        </MetadataContainer>
+        <TrackDetails track={trackMetadata} />
         <VotesBar place={index} percentage={trackVotes.votePercentage} >
           <div>{trackVotes.voteCount} {trackVotes.voteCount === 1 ? 'vote' : 'votes'}</div>
         </VotesBar>

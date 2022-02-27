@@ -16,8 +16,8 @@ class GetVotes {
     const partyId = event.pathParameters.partyId;
     const roundId = event.pathParameters.roundId;
 
-    if (!partyId) {
-      return badRequest('partyId required in path parameters');
+    if (!partyId || !roundId) {
+      return badRequest('partyId & roundId required in path parameters');
     }
 
     const votes = await this.voteRepository.getVotes(partyId, roundId);
