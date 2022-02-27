@@ -1,5 +1,5 @@
-import { SpotifyCredentials } from "./spotifyCredentials";
+import { SpotifyApiResult } from './spotifyApiResult';
 
-export interface PlayTrackResult {
-  refreshedSpotifyCredentials?: SpotifyCredentials;
+
+export interface PlayTrackResult extends SpotifyApiResult {
 }

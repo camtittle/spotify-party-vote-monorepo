@@ -1,5 +1,4 @@
-import { Track } from "./track";
-
 export interface SetTracksRequest {
-    tracks: Track[];
+    partyId: string;
+    trackIds: string[];
 }

@@ -53,7 +53,7 @@ class FinishRound {
       throw new Error('Winning track not found. Try starting a new round');
     }
     winningTrack.playedAt = new Date().toISOString();
-    await this.trackRepository.putTrack(partyId, winningTrack);
+    await this.trackRepository.putTrack(winningTrack);
 
     // Play on spotify
     const playResult = await this.spotifyService.playTrack(winningTrackId, mapToDto(party.spotifyCredentials));

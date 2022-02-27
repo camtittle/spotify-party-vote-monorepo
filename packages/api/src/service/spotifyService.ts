@@ -12,6 +12,7 @@ import isAfter from 'date-fns/isAfter';
 import { PlayTrackResult } from "../model/dto/playTrackResult";
 import { SpotifyCredentials } from "../model/dto/spotifyCredentials";
 import SpotifyWebApi from "spotify-web-api-node";
+import { GetTrackResult } from '../model/dto/getTrackResult';
 
 @injectable()
 export class SpotifyService extends ISpotifyService {
@@ -120,6 +121,28 @@ export class SpotifyService extends ISpotifyService {
 
         return {
             refreshedSpotifyCredentials: refreshedCredentials
+        }
+    }
+
+    public async getTrack(trackId: string, credentials: SpotifyCredentials): Promise<GetTrackResult> {
+        const refreshedCredentials = await this.refreshCredentials(credentials);
+        if (refreshedCredentials) {
+            credentials = refreshedCredentials;
+        }
+
+        const spotifyClient = new SpotifyWebApi();
+        spotifyClient.setAccessToken(credentials.accessToken);
+
+        const track = await spotifyClient.getTrack(trackId);
+
+        return {
+            refreshedSpotifyCredentials: refreshedCredentials,
+            track: {
+                trackId,
+                artist: track.body.artists.map(x => x.name).join(', '),
+                title: track.body.name,
+                artworkUrl: track.body.album.images[0].url,
+            }
         }
     }
 
