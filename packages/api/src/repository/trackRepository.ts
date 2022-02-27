@@ -1,66 +1,65 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { ITrackRepository } from "../interface/ITrackRepository";
 import { TrackEntity } from "../model/entity/track";
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { EnvironmentVariable } from '../enum/environmentVariable';
+import { IEnvironmentHelper } from '../interface/IEnvironmentHelper';
+import { DbItemType } from '../enum/dbItemType';
 
 @injectable()
 export class TrackRepository extends ITrackRepository {
-  putTrack(partyId: string, track: TrackEntity): Promise<void> {
+
+  constructor(@inject(IEnvironmentHelper) private readonly environmentHelper: IEnvironmentHelper,
+              @inject(DocumentClient) private readonly documentClient: DocumentClient) {
+    super();
+  }
+
+  private getTableName() {
+    return this.environmentHelper.getEnvironmentVariable(EnvironmentVariable.DynamoDbTableName);
+  }
+
+  private getPartitionKey(partyId: string): string {
+    return `${DbItemType.Track}#${partyId}`;
+  }
+
+  public async putTrack(track: TrackEntity): Promise<void> {
     console.log('Put track');
-    return Promise.resolve();
+
+    const params: DocumentClient.PutItemInput = {
+      TableName: this.getTableName(),
+      Item: track
+    };
+
+    await this.documentClient.put(params).promise();
   }
 
   public async getTrack(partyId: string, trackId: string): Promise<TrackEntity> {
-    console.log('Get track');
-    // TODO implementation
-    return {
-      trackId: 'spotify:track:4sNG6zQBmtq7M8aeeKJRMQ',
-      partyId: partyId,
-      title: 'Roll With Me',
-      artist: 'Charli XCX',
-      artworkUrl: 'https://static.wikia.nocookie.net/xcx-world/images/8/8a/Number_1_Angel.png/revision/latest?cb=20171107123850',
-      createdAt: '',
-      updatedAt: '',
-      partitionKey: '',
-      sortKey: ''
+    console.log(`Get track ${trackId}`);
+
+    const params: DocumentClient.GetItemInput = {
+      TableName: this.getTableName(),
+      Key: {
+        partitionKey: this.getPartitionKey(partyId),
+        sortKey: trackId
+      }
     };
+
+    const result = await this.documentClient.get(params).promise();
+    return result.Item as TrackEntity;
   }
 
   public async getTracks(partyId: string): Promise<TrackEntity[]> {
-    // TODO implementation
-    return [
-      {
-        trackId: 'spotify:track:4sNG6zQBmtq7M8aeeKJRMQ',
-        partyId: partyId,
-        title: 'Roll With Me',
-        artist: 'Charli XCX',
-        artworkUrl: 'https://static.wikia.nocookie.net/xcx-world/images/8/8a/Number_1_Angel.png/revision/latest?cb=20171107123850',
-        createdAt: '',
-        updatedAt: '',
-        partitionKey: '',
-        sortKey: ''
+    const params: DocumentClient.QueryInput = {
+      TableName: this.getTableName(),
+      KeyConditionExpression: `partitionKey = :partitionKeyVal AND sortKey = :sortyKeyVal`,
+      FilterExpression: 'attribute_exists(playedAt) OR playedAt = NULL',
+      ExpressionAttributeValues: {
+        ':partitionKeyVal': this.getPartitionKey(partyId),
       },
-      {
-        trackId: 'spotify:track:0jeJE3TUJ5FrRuVLr7w4JQ',
-        partyId: partyId,
-        title: 'Euphoria',
-        artist: 'Loreen',
-        artworkUrl: 'https://upload.wikimedia.org/wikipedia/en/6/6c/Euphoria-by-loreen.JPG',
-        createdAt: '',
-        updatedAt: '',
-        partitionKey: '',
-        sortKey: ''
-      },
-      {
-        trackId: 'spotify:track:2ORvnjpTAXtyTKnaGAgFIv',
-        partyId: partyId,
-        title: 'Born Slippy',
-        artist: 'Underworld',
-        artworkUrl: 'https://lastfm.freetls.fastly.net/i/u/770x0/39ec47154e755d8f0972cea462c3c803.jpg',
-        createdAt: '',
-        updatedAt: '',
-        partitionKey: '',
-        sortKey: ''
-      }
-    ]
+      ConsistentRead: true
+    };
+
+    const result = await this.documentClient.query(params).promise();
+    return result.Items as TrackEntity[];
   }
 }
